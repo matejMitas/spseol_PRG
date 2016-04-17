@@ -5,18 +5,84 @@
 	<title>Spseol_PRG - Kalkulačka</title>
   	 
   <!-- CSS files -->
-  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/style.css">
 
   <!-- external JS files -->
   <script src=""></script>
 
+  <style type="text/css">
+    
+    input[type=number] {
+      width: 10%;
+    }
+  
+  </style>
+
 </head>
-<body>
+<body ng-app="datesApp">
 
     <!-- main content -->
-    <main></main>
+    <div class="bg-img">
+      <main ng-controller="mainCtrl">
+
+        <input type="number" ng-change="myFunc()" ng-model="date.day" min=1 max=31/>
+        <input type="number" ng-change="myFunc()" ng-model="date.month" min="1" max="12"/>
+        <input type="number" ng-change="myFunc()" ng-model="date.year" min="1970" max="2030"/>
+        <button ng-click="getTodayDate()">Dnes</button>
+
+
+
+
+
+        <h3>Jmeniny</h3>
+        <p>{{name}}</p>
+
+
+
+
+
+        <h3>Narozeniny</h3>
+        <div>
+    
+        <ul>
+          <li ng-repeat="birthday in birthdays">
+            <ul>
+              <li ng-repeat="person in birthday">
+                {{person}}
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+        </div>
+
+        <br>
+
+
+
+
+
+        <input type="text" ng-model="personName">Jméno</input>
+        <input type="text" ng-model="personNote">poznámka</input>
+        <br>
+
+        {{ error }}
+      
+        <br>
+        <button ng-click="addUser()">(+) Přidej záznam narozenin</button>
+        <button ng-click="removeUser()">(-) Odeber vybranou osobu</button>
+
+
+
+
+
+
+      </main>
+    </div>  
 
     <!-- main JS file -->
+    <script src="../libs/angular.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/controller.js"></script>
 </body>
 </html>

@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Spseol_PRG - Kalkulačka</title>
+	<title>Spseol_PRG - Počítání ZŠ</title>
   	 
   <!-- CSS files -->
-  <link rel="stylesheet" href="css/main.css">
+<!--   <link rel="stylesheet" href="css/main.css"> -->
 
   <!-- external JS files -->
   <script src=""></script>
@@ -14,7 +14,25 @@
 <body>
 
     <!-- main content -->
-    <main></main>
+    <main>
+    
+    <label for="operace"> Operace:</label>  
+    <input type="text" id="operace"></input>
+
+    <br>
+
+    <input type="number" id="num1"></input> 
+    +
+    <input type="number" id="num2"></input>
+    =
+    <input type="number" id="result"></input>
+
+    <br>
+
+    <button>OK</button>
+    <span id="remaining">2/5</span>
+
+    </main>
 
     <!-- main JS file -->
     <script src="js/main.js"></script>

@@ -2,21 +2,51 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Spseol_PRG - Kalkulačka</title>
+	<title>Spseol_PRG - Směnárna</title>
   	 
   <!-- CSS files -->
-  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/style.css">
 
   <!-- external JS files -->
   <script src=""></script>
 
 </head>
-<body>
+<body ng-app="currencyApp">
 
     <!-- main content -->
-    <main></main>
+    <div class="bg-img">
+      <main ng-controller="mainCtrl">
+
+        <h1>Směnárna</h1>
+
+        <input type="radio" ng-model="transaction" ng-change="changeMode(transaction)" value="buy"/><label for="track">Nákup</label>
+        <input type="radio" ng-model="transaction" ng-change="changeMode(transaction)" value="sell" /><label for="event">Prodej</label>
+
+        <br>
+
+        <label for="currency">Měna</label>
+        <select id="currency" 
+                ng-init="options[0]"
+                ng-change="changeCurrency(currencySelect)" 
+                ng-model="currencySelect">
+
+          <option value="{{currency}}" ng-repeat="currency in currencies">{{currency}}</option>
+
+        </select>
+        <p>{{crowns || "české koruny"}}<span>CZK</span></p>
+        <p>{{(foreignCurrency | number:2) || "zahraniční měna"}}<span>{{fc || "TBA"}}</span></p>
+
+        <input type="number" min=1 id="sum" value="1"></input>
+
+        <p>{{(result | number:2) || "výsledek výpočtu"}}<span>{{rc || "TBA"}}</span></p>
+
+        <button ng-click="convert()" class="button button--antiman button--text-thick button--text-upper button--size-s button--inverted-alt button--round-s button--border-thick"><i class="button__icon icon icon-plus"></i><span>výpočet</span></button>
+      </main>
+    </div>
 
     <!-- main JS file -->
+    <script src="../libs/angular.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/controller.js"></script>
 </body>
 </html>
