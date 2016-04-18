@@ -1,40 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Spseol_PRG - Počítání ZŠ</title>
-  	 
-  <!-- CSS files -->
-<!--   <link rel="stylesheet" href="css/main.css"> -->
+    <meta charset="UTF-8">
+    <title>Spseol_PRG - Počítání ZŠ</title>
+     
+    <!-- CSS files -->
+    <link rel="stylesheet" href="css/style.css">
 
-  <!-- external JS files -->
-  <script src=""></script>
+    <!-- external JS files -->
+    <script src=""></script>
+
+    <style type="text/css">
+    
+        input[type=number] {
+            width: 10%;
+        }
+  
+  </style>
 
 </head>
-<body>
+<body ng-app="mathApp">
 
     <!-- main content -->
-    <main>
-    
-    <label for="operace"> Operace:</label>  
-    <input type="text" id="operace"></input>
+    <div class="bg-img" ng-controller="mainCtrl">
+      <main>
 
-    <br>
+        <div id="operations">
+            <label for="operace"> Operace:</label>  
+            <input type="text" ng-model="signs"></input>
+            <label for="operace"> Počet příkladů:</label>  
+            <input type="number" min="1" ng-model="numTasks"></input>
+            <button ng-click="getSigns()">OK</button>
+        </div>
 
-    <input type="number" id="num1"></input> 
-    +
-    <input type="number" id="num2"></input>
-    =
-    <input type="number" id="result"></input>
+        <br>
 
-    <br>
+        <div id="app" class="inactive">
+            <span id="num1">{{num1}}</span> 
+            <span id="sign">{{sign}}</span>
+            <span id="num2">{{num2}}</span>
+            =
+            <input type="number" ng-model="result"></input>
 
-    <button>OK</button>
-    <span id="remaining">2/5</span>
+            <button ng-click="evaluate()">OK</button>
+            <span id="remaining">{{remaining}}</span>
+        </div>
 
-    </main>
+        <br>
+
+        <div id="results" class="inactive">
+            <span>Správně {{correct}}</span>
+            <span>Špatně {{wrong}}</span>
+        </div>
+      </main>
+    </div>  
 
     <!-- main JS file -->
+    <script src="../libs/angular.min.js"></script>
+    <script src="js/angular-route.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/controller.js"></script>
 </body>
 </html>

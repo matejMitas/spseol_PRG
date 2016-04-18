@@ -60,11 +60,11 @@
 
     // console.log(generate)
 
-    // $scope.data = [generate.sin()];
+    $scope.data = [[2,4,6,8,9,10]];
 
     // x axis
 
-    // $scope.labels = generate.linspace(0,50,40);
+    $scope.labels = [0,5,20,50,80];
 
     // $scope.active = true;
 

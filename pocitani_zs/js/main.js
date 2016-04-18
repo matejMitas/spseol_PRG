@@ -1,89 +1,65 @@
 /* -------------------------------- 
 
-PLÁN:
-
-- čísla do 100 u +-, u /* do 10, s tím, že č2 musím být menší než č1
-- určíme matematické operace
-- vygenerujeme dvě čísla podle požadavků
-- vypočteme výsledek
-- zaneseme do view
-- porovnáme
-- znovu vygenerujeme
-
+App
 
 -------------------------------- */
+var mathApp = angular.module('mathApp', []);
 
-/* -------------------------------- 
+mathApp.controller('mainCtrl', ['$scope', 'getTasks', function($scope, getTasks){
 
-Main function
-
--------------------------------- */
-
-function generateTasks(signs, count) {
-
-  // helper function
-  function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
+  var counter = 0;
+  var max = 0;
+  var tasks;
+  var inactive = "inactive";
+  var elems = {
+    oper: document.getElementById("operations"),
+    app: document.getElementById("app"),
+    results: document.getElementById("results"),
   }
-  
-  // base vars
-  var operators = signs.split('');
-  // remove previous tasks
-  tasks = [];
 
-  for (i = 0; i < count; i++) {
-    var result;
-    var nums;
+  $scope.correct = 0;
+  $scope.wrong = 0;
 
-    // random operators chose from available operators
-    var randomOperator = operators[getRandomInt(0, operators.length - 1)];
+  $scope.evaluate = function() {
 
-    // generate nums depending on the operator
-    if (randomOperator == '*') {
-      nums = [getRandomInt(2, 10), getRandomInt(2, 10)];
-      result = nums[0] * nums[1];
-    } 
+    if (counter < max - 1) {
 
-    else if (randomOperator == '/') {
-
-    }
-
-    else if (randomOperator == '+') {
-      nums = [getRandomInt(1, 50), getRandomInt(1, 50)];
-      result = nums[0] + nums[1]; 
-    }
-
-    else if (randomOperator == '-') {
-      nums = [getRandomInt(1, 50), getRandomInt(1, 50)];
-      // ensure result will not be negative
-      while (nums[0] < nums[1]) {
-        nums = [getRandomInt(1, 50), getRandomInt(1, 50)];
+      if ($scope.result == tasks[counter].expectedResult) {
+        $scope.correct++;
+      } else {
+        $scope.wrong++;
       }
-      result = nums[0] - nums[1];
+
+      $scope.result = "";
+      
+      counter++;
+
+      $scope.num1 = tasks[counter].firstNum;
+      $scope.num2 = tasks[counter].secondNum;
+      $scope.sign = tasks[counter].operator;
+      $scope.remaining = (counter + 1) + "/" + max;
     }
-
-    tasks.push({
-      firstNum: nums[0],
-      secondNum: nums[1],
-      operator: randomOperator,
-      expectedResult: result 
-    })
   }
-  return tasks;
-}
+
+  $scope.getSigns = function() {
+    
+    max = $scope.numTasks;
+    tasks = getTasks.generate($scope.signs, max);
+
+    // fill in the start state
+    $scope.num1 = tasks[counter].firstNum;
+    $scope.num2 = tasks[counter].secondNum;
+    $scope.sign = tasks[counter].operator;
+    $scope.remaining = 1 + "/" + max;
+
+    // adjust the UI
+    elems.app.classList.remove(inactive);
+    elems.results.classList.remove(inactive);
+    elems.oper.classList.add(inactive);
+
+  }
+
+}]);
 
 
 
-/* -------------------------------- 
-
-Usage
-
--------------------------------- */
-// create empty array
-var tasks = [];
-
-// call function with operators and number of tasks
-generateTasks('*-+', 5);
-
-
-console.log(tasks);
