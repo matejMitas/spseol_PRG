@@ -11,7 +11,6 @@ myApp.config(function($locationProvider) {
 });
 
 myApp.controller('BoardCtrl', function($scope) {
-  $scope.boardSize = 19;
   $scope.boardControl = {};
 });
 
@@ -22,77 +21,202 @@ myApp.directive('board', ['$timeout', function(timer) {
     scope: true,
     link: function(scope, element) {
 
-      /*
-       * Use an internalControl object to expose operations
-       */
+      /* -------------------------------- 
+      
+      Base vars
+      
+      -------------------------------- */
+
+      var colors = ['red', 'orange', 'yellow', 'green', 'blue', 'violet'];
+      var gameCombination = getRandomCombination();
+      var counter = 0;
+      var colorsToDraw = [];
+      var currentColumnCount = 0;
+      var currentRowCount = 0;
+      var endGame = document.getElementById("end");
+
+      /* -------------------------------- 
+      
+      Helper functions
+      
+      -------------------------------- */
+
+      function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      function getRandomCombination() {
+        var combination = [];
+        for (var i = 0, l = colors.length; i < 4; i++) {
+          combination.push(colors[getRandomInt(0, l - 1)]);
+        }
+        return combination;
+      }
+
+      // console.log(getRandomCombination());
+
+      /* -------------------------------- 
+      
+      Use an internalControl object to expose operations
+      
+      -------------------------------- */
+
       scope.internalControl = scope.boardControl || {};
       scope.internalControl.resetBoard = function() {
-        drawEmptyBoard(element[0]);
+          drawBase();
+          currentColumnCount = 0;
+          currentRowCount = 0;
+          counter = 0;
+          end.classList.remove("inactive");
       };
 
+      scope.internalControl.draw = function(color) {
+        // draw(color);
 
-      function randomColor() {
-            var letters = '0123456789ABCDEF'.split('');
-            var color = '#';
-            for (var i = 0; i < 6; i++ ) {
-                color += letters[Math.floor(Math.random() * 16)];
+        if (colorsToDraw.length < 4) {
+          colorsToDraw.push(color);
+          drawNextMove(color);
+          currentColumnCount++;
+
+          if (colorsToDraw.length == 4) {
+            drawMoveResult(colorsToDraw);
+
+            if (colorsToDraw.toString() === gameCombination.toString() || currentRowCount == 6) {
+              end.classList.add("inactive");
             }
-            return color;
-        }
 
-      /*
-       * Function to draw an empty board. This function will be called whenever
-       * user reset the board.
-       */
-      function drawEmptyBoard(element) {
+            colorsToDraw = [];
+            currentColumnCount = 0;
+            currentRowCount++;
 
-        // setup the paper scope on canvas
-        if (!scope.paper) {
-          scope.paper = new paper.PaperScope();
-          scope.paper.setup(element);
+          }
         }
+      };
+
+      /* -------------------------------- 
+        
+      Asign the paperscope to scope
+        
+      -------------------------------- */
+
+      if (!scope.paper) {
+            scope.paper = new paper.PaperScope();
+            scope.paper.setup(element[0]);
+
+            // assign the global paper object
+            paper = scope.paper;
+      }
+
+      /* -------------------------------- 
+      
+      Draw base playground
+      
+      -------------------------------- */
+
+      function drawBase() {
 
         // clear all drawing items on active layer
         scope.paper.project.activeLayer.removeChildren();
 
+        // clear all drawing items on active layer
+
         var width = 400;
         var height = 400;
-        var boardSize = [5,10];
+        var boardSize = [4,7];
         var start = [0,0];
 
         var stepX = width / boardSize[0];
         var stepY = height / boardSize[1];
 
-        for (var i = 1; i <= boardSize[0]; i++) {
-          // generate row
-          var x = [start[0] * i, start[1]];
-          var y = [stepX * i, stepY];
+        var rows = 0;
 
-          new paper.Path.Rectangle({
-            from: x,
-            to: y,
-            strokeColor: 'red' 
-          });
-
-          for (var j = 2; j <= boardSize[1] - 1; j++) {
-            // generate column
-            var x = [start[0] * i, start[1] * j];
-            var y = [stepX * i, stepY * j];
-
-            new paper.Path.Rectangle({
-              from: x,
-              to: y,
-              strokeColor: 'green'
-            });
+        function drawRows() {
+          for (var i = 0; i < boardSize[1]; i++) {
+            for (var j = 0; j < boardSize[0]; j++) {
+              var rowPath = new paper.Path.Circle({
+                center: [50 + (80 * j), 50 + (80 *rows)],
+                radius: 30,
+                fillColor: "#ccc"
+              });
+            }
+            rows++;
           }
         }
 
-        paper.view.draw();
+        drawRows();
 
-        console.log(scope.paper.project.activeLayer.children);
+        // assign the global paper object
+        paper.view.draw();
       }
 
-      timer(drawEmptyBoard(element[0]), 0);
+      /* -------------------------------- 
+      
+      Draw Row
+      
+      -------------------------------- */
+
+
+      function drawNextMove(color) {
+
+        // clear all drawing items on active layer
+
+        if (currentColumnCount < 4) {
+          var rowPath = new paper.Path.Circle({
+                  center: [50 + (80 * currentColumnCount) , 50 + (80 * currentRowCount)],
+                  radius: 30,
+                  fillColor: color
+          });
+        }
+
+        paper.view.draw();
+      }
+
+
+
+      // var toCheck = ["red", "yellow", "green"];
+      // function findDuplicates(toCheck) {
+      //   for (var i = 0; i < 3; i++) {
+      //     console.log(toCheck[i]);
+      //   }
+      // }
+
+      // findDuplicates(toCheck);
+
+      /* -------------------------------- 
+      
+      Small things on the rigth
+      
+      -------------------------------- */
+
+      function drawMoveResult(input) {
+
+        // clear all drawing items on active layer
+        var results = [];
+
+        for (var i = 0; i < 4; i++) {
+
+          if (input[i] == gameCombination[i]) {
+            results.push("black");
+          } else if (gameCombination.indexOf(input[i]) !== -1 && results.indexOf(input[i]) == -1) {
+            results.push("white");
+          } else {
+            results.push("#ccc");
+          }
+
+
+          var path = new paper.Path.Circle({
+            center: [350 + (i * 20), 47 + (counter * 80)],
+            radius: 8,
+            fillColor: results[i]
+          });
+        }
+
+        counter++;
+        paper.view.draw();
+      }
+
+
+      timer(drawBase(), 0);
     }
   };
 

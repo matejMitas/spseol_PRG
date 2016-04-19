@@ -1,21 +1,17 @@
-(function () {
-  'use strict';
+var app = angular.module('graphsApp', ['chart.js', 'ui.bootstrap']);
 
-  var app = angular.module('examples', ['chart.js', 'ui.bootstrap']);
-
-  app.config(function (ChartJsProvider) {
-    // Configure all charts
-    ChartJsProvider.setOptions({
-      colours: ['#97BBCD', '#DCDCDC', '#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
-      responsive: true
-    });
-    // Configure all doughnut charts
-    ChartJsProvider.setOptions('Doughnut', {
-      animateScale: true
-    });
+app.config(function (ChartJsProvider) {
+  // Configure all charts
+  ChartJsProvider.setOptions({
+    colours: ['#97BBCD', '#DCDCDC', '#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360']
   });
+  // Configure all doughnut charts
+  ChartJsProvider.setOptions('Doughnut', {
+    animateScale: true
+  });
+});
 
-  app.service('generate', function(){
+app.service('generate', function(){
 
     // function 
 
@@ -53,20 +49,44 @@
 
     return this;
 
-  });
+});
 
-  app.controller('TabsCtrl', function ($scope, generate) {
-    // y axis
+app.controller('TabsCtrl', function ($scope, generate) {
+  // y axis
+  // console.log(generate)
 
-    // console.log(generate)
-
-    $scope.data = [[2,4,6,8,9,10]];
-
+  $scope.data = [[2,4,6,8]];
     // x axis
+  $scope.labels = [0,5,20,50,80];
 
-    $scope.labels = [0,5,20,50,80];
+  // $scope.active = true;
 
-    // $scope.active = true;
+  $scope.createGraphInput = function() {
+    console.log($scope.transaction);
+    console.log($scope.from);
+    console.log($scope.to);
+  }
 
-  });
-})();
+  $scope.neco = function(data) {
+    console.log(data.files);
+  }
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
